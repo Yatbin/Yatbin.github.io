@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-12T16:03:10.577Z</updated>
+  <updated>2020-07-13T03:11:36.673Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hive运行报错Error during job</title>
+    <link href="http://yoursite.com/2020/07/13/Hive%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99Error%20during%20job/"/>
+    <id>http://yoursite.com/2020/07/13/Hive运行报错Error during job/</id>
+    <published>2020-07-13T03:10:59.398Z</published>
+    <updated>2020-07-13T03:11:36.673Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Hive运行报错Error-during-job-obtaining-debugging-information…"><a href="#Hive运行报错Error-during-job-obtaining-debugging-information…" class="headerlink" title="Hive运行报错Error during job, obtaining debugging information…"></a>Hive运行报错Error during job, obtaining debugging information…</h1><p>在hive中执行select count(*)语句时候，一直卡住，之后报错，具体报错内容如下:<br><img src="https://s1.ax1x.com/2020/07/13/UGzojK.png" alt="UGzojK.png" border="0" width="960" /><br>之后我执行insert语句也是报这样的错，但是select的简单语句却非常快执行出结果来，然后我按照网上的教程查看自己的yarn页面<br><img src="https://s1.ax1x.com/2020/07/13/UJSBUH.png" alt="UJSBUH.png" border="0" /><br>可以看到<strong>Call From study.centos.yatbin/223.82.248.117 to 223.82.248.117:34116 </strong>这些提示，之后我在hive中执行如下命令将hive设置成本地模式来执行任务，问题得到解决，在此记录以下！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.mode.local.auto&#x3D;true;</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Hive运行报错Error-during-job-obtaining-debugging-information…&quot;&gt;&lt;a href=&quot;#Hive运行报错Error-during-job-obtaining-debugging-information…&quot; clas
+      
+    
+    </summary>
+    
+      <category term="教程" scheme="http://yoursite.com/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+      <category term="教程" scheme="http://yoursite.com/tags/%E6%95%99%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo+GitHub搭建个人博客</title>

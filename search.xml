@@ -26,4 +26,16 @@
         <tag>教程</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Hive运行报错Error during job</title>
+    <url>/2020/07/13/Hive%E8%BF%90%E8%A1%8C%E6%8A%A5%E9%94%99Error%20during%20job/</url>
+    <content><![CDATA[<h1 id="Hive运行报错Error-during-job-obtaining-debugging-information…"><a href="#Hive运行报错Error-during-job-obtaining-debugging-information…" class="headerlink" title="Hive运行报错Error during job, obtaining debugging information…"></a>Hive运行报错Error during job, obtaining debugging information…</h1><p>在hive中执行select count(*)语句时候，一直卡住，之后报错，具体报错内容如下:<br><img src="https://s1.ax1x.com/2020/07/13/UGzojK.png" alt="UGzojK.png" border="0" width="960" /><br>之后我执行insert语句也是报这样的错，但是select的简单语句却非常快执行出结果来，然后我按照网上的教程查看自己的yarn页面<br><img src="https://s1.ax1x.com/2020/07/13/UJSBUH.png" alt="UJSBUH.png" border="0" /><br>可以看到<strong>Call From study.centos.yatbin/223.82.248.117 to 223.82.248.117:34116 </strong>这些提示，之后我在hive中执行如下命令将hive设置成本地模式来执行任务，问题得到解决，在此记录以下！<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set hive.exec.mode.local.auto&#x3D;true;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>教程</category>
+      </categories>
+      <tags>
+        <tag>教程</tag>
+      </tags>
+  </entry>
 </search>
