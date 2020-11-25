@@ -296,4 +296,192 @@
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Linux学习笔记02</title>
+    <url>/2020/11/25/Linux02_Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="Linux的文件权限与目录配置"><a href="#Linux的文件权限与目录配置" class="headerlink" title="Linux的文件权限与目录配置"></a>Linux的文件权限与目录配置</h1><h2 id="1-用户与用户组"><a href="#1-用户与用户组" class="headerlink" title="1.用户与用户组"></a>1.用户与用户组</h2><ul>
+<li>每个文件都有相当多的属性与权限，最重要的概念可能就是文件的拥有者了</li>
+<li><strong>文件拥有者（User）</strong></li>
+<li><strong>用户组（Group）</strong>：当你在团队进行协同工作的时候，用户组非常有用，<strong>每个账号都可以有多个用户组的支持</strong></li>
+<li><strong>其他人（Others）</strong>：在Linux里面，任何一个文件都具有用户、所属群组以及其他人（Others）三种身份的个别权限，注意<strong>root无所不能</strong></li>
+</ul>
+<h2 id="2-Linux文件权限概念"><a href="#2-Linux文件权限概念" class="headerlink" title="2.Linux文件权限概念"></a>2.Linux文件权限概念</h2><h3 id="2-1Linux文件属性"><a href="#2-1Linux文件属性" class="headerlink" title="2.1Linux文件属性"></a>2.1Linux文件属性</h3><ol>
+<li>使用<strong>su -</strong> 切换为root身份</li>
+<li>运行<strong>ls -al</strong>命令，运行结果如下，如果不熟悉ls命令，运行ls帮助命令<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 公共</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 模板</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 视频</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 图片</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 文档</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 下载</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 音乐</span><br><span class="line">drwxr-xr-x.  2 root root     6 7月  10 13:22 桌面</span><br><span class="line">[1]         [2] [3]  [4]    [5]    [6]       [7]</span><br><span class="line">权限        链接 拥有者用户组 文件容量 修改日期 文件名</span><br></pre></td></tr></table></figure></li>
+<li>文件属性说明：<ol>
+<li>第[1]栏代表这个文件的类型与权限<ul>
+<li>这一栏总共有十个字符</li>
+<li>第一个字符代表这个文件是<strong>目录、文件还是链接文件</strong>等</li>
+<li>[d]表示目录，[-]表示文件，[l]表示链接文件（link file)，[b]表示设备文件里面的可供存储的周边设备，[c]表示设备文件里面的串行端口设备，例如键盘</li>
+<li>接下来的字符中，三个为一组，均为[rwx]三个参数的组合，其中[r]代表可读(read)，[w]代表可写(write)，[x]代表可执行(execute)，如果没有权限，就会出现[-]号</li>
+<li>第一组为文件<strong>拥有者</strong>(User)具备的权限，第二组为加入此<strong>用户组</strong>(Group)的账号的权限，第三组为非本人且没有加入本用户组的<strong>其他账号</strong>(Others)权限</li>
+</ul>
+</li>
+<li>第[2]栏表示有多少文件名链接到此节点(inode)：每个文件都会将它的权限与属性记录到文件系统的inode中</li>
+<li>第[3]栏表示这个文件（或者目录）的拥有者账号</li>
+<li>第[4]栏表示这个文件所属用户组</li>
+<li>第[5]栏表示这个文件的容量大小，默认单位是Bytes</li>
+<li>第[6]栏表示这个文件的创建日期或者是最近的修改日期</li>
+<li>第[7]栏表示文件名</li>
+<li>root基本上不受系统权限所限制，无论文件权限是什么，默认root都可以读写</li>
+</ol>
+</li>
+</ol>
+<h3 id="2-2修改文件属性与权限"><a href="#2-2修改文件属性与权限" class="headerlink" title="2.2修改文件属性与权限"></a>2.2修改文件属性与权限</h3><ul>
+<li><strong>chgrp</strong>(change group)：修改所属用户组，被修改的组名必须要在<strong>/etc/group</strong>文件中存在才行，否则会显示错误，详细用法参考man page</li>
+<li><strong>chown</strong>：修改文件拥有者，用户必须是已经存在系统中的账号，也就是在<strong>/etc/passwd</strong>这个文件中有记录的用户名称才能修改，<strong>如果要连目录下的所有子目录或文件同时更改文件拥有者的话，直接加上-R的选项即可</strong>。此外，这个命令还可以顺便直接修改用户组的名称，详细用法参考man page</li>
+<li><strong>注意</strong>：使用<code>cp 源文件 目标文件</code>这个命令将文件复制给你之外的其他人时，由于复制操作cp会复制执行者的属性与权限，所以必须要将这个文件的拥有者与用户组修改一下</li>
+<li><strong>chmod</strong>：修改权限，两种方法，分别是使用数字或者符号来进行权限的修改：<ol>
+<li><strong>数字类型修改文件权限</strong>：文件的权限字符为【-rwxrwxrwx】，三个三个一组，各权限数字对照表为<strong>r:4, w:2, x:1</strong>，其实这就相当于二进制，例如用户权限为rwx，那么4+2+1=7，即为二进制111，而如果时r-x，4+1=5，即为二进制101。修改权限命令的语法是：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chmod [-R] xyz 文件或者目录</span><br><span class="line">选线与参数：</span><br><span class="line">xyz:就是上面提到的数字类型的权限属性，为rwx属性数值的相加</span><br><span class="line">-R:进行递归（recursive）修改，即子目录下的所有文件都会修改</span><br></pre></td></tr></table></figure></li>
+<li><strong>符号类型修改文件权限</strong>：文件的九个权限分别是(1)user，(2)group，(3)others三种身份，可以借用u、g、o来代表三种身份的权限，此外a代表all即全部身份，可以用下表的方法来修改权限</li>
+</ol>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>chmod</th>
+<th>u(user)<br>g(group)<br>o(others)<br>a(all)</th>
+<th>+（加入）<br>-（移除）<br>=（设置）</th>
+<th>r<br>w<br>x</th>
+<th>文件或目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-3目录与文件的权限意义"><a href="#2-3目录与文件的权限意义" class="headerlink" title="2.3目录与文件的权限意义"></a>2.3目录与文件的权限意义</h3><ol>
+<li>权限对文件的重要性<ul>
+<li>r(read):可读取此文件的实际内容</li>
+<li>w(write):可以编辑、新增或是修改该文件的内容（但是不含删除该文件）</li>
+<li>x(execute):该文件具有可以被系统执行的权限，在Linux下面，<strong>我们的文件能否被执行，是借助是否具有【x】这个权限来决定，跟文件名是没有绝对的关系的</strong></li>
+</ul>
+</li>
+<li>权限对目录的重要性<ul>
+<li>r(read contents in directory):表示具有读取目录结构列表的权限，所以当你具有读取（r）一个目录的权限时，你可以查询该目录下的文件名数据，所以可以用ls这个命令将该目录的内容列表显示出来</li>
+<li>w(modify contents of directory):<strong>表示具有改动该目录结构列表的权限</strong>：<ul>
+<li>建立新的文件与目录</li>
+<li>删除已经存在的文件与目录（不论该文件的权限是什么）</li>
+<li>将已存在的文件或者目录进行更名</li>
+<li>移动该目录内的文件、目录位置</li>
+</ul>
+</li>
+<li>x(access directory):<strong>目录的x代表的是用户能否进入该目录成为工作目录的用途</strong>，如果你在某目录下不具有x的权限，那么你就无法切换到该目录下，也就无法执行该目录下的任何命令，即使你具有该目录的 r 或 w 权限</li>
+<li><strong>例</strong>：假设有两个文件名：<code>/dir1/file1</code>和<code>/dir2</code>，分别需要的最小的权限才能完成各项任务如下所示：</li>
+</ul>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>/dir1</th>
+<th>/dir1/file1</th>
+<th>/dir2</th>
+<th>重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读取file1内容</td>
+<td>x</td>
+<td>r</td>
+<td>-</td>
+<td>要能够进入/dir1才能读取到里面的文件数据</td>
+</tr>
+<tr>
+<td>修改file1内容</td>
+<td>x</td>
+<td>rw</td>
+<td>-</td>
+<td>能够进入/dir1且修改file1才行</td>
+</tr>
+<tr>
+<td>执行file1内容</td>
+<td>x</td>
+<td>rx</td>
+<td>-</td>
+<td>能够进入/dir1且file1能运行才行</td>
+</tr>
+<tr>
+<td>删除file1文件</td>
+<td>wx</td>
+<td>-</td>
+<td>-</td>
+<td>能够进入/dir1具有目录修改的权限即可</td>
+</tr>
+<tr>
+<td>将file1复制到/dir2</td>
+<td>x</td>
+<td>r</td>
+<td>wx</td>
+<td>要能够读file1且能够修改/dir2内的数据</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-4Linux文件种类与拓展名"><a href="#2-4Linux文件种类与拓展名" class="headerlink" title="2.4Linux文件种类与拓展名"></a>2.4Linux文件种类与拓展名</h3><ol>
+<li>文件种类<ol>
+<li>常规文件（regular file）<ul>
+<li>纯文本文件</li>
+<li>二进制文件</li>
+<li>数据文件：有些程序在运行过程当中会读取某些特定格式的文件，那些特定格式的文件可以被成为数据文件</li>
+</ul>
+</li>
+<li>目录（directory）</li>
+<li>链接文件（link）：类似Windows系统下面的快捷方式</li>
+<li>设备与设备文件（device）：与系统周边及存储等相关的一些文件，通常都在/dev这个目录之下，通常分为两种：<ul>
+<li>区块（block）设备文件：就是一些存储数据，以提供系统随机存取的接口设备，例如硬盘和软盘，这些<strong>文件第一个属性为[b]</strong></li>
+<li>字符（character）设备文件：一些串行端口的接口设备，例如键盘、鼠标等，这些设备一次性读取，不能够截断输出，<strong>第一个属性是[c]</strong></li>
+</ul>
+</li>
+<li>数据接口文件：这种类型的文件通常被用在网络上的数据交换，<strong>第一个属性为[s]</strong></li>
+<li>数据输送文件（FIFO，pipe）：主要的目的是解决多个程序同时读写一个文件所造成的错误问题</li>
+</ol>
+</li>
+<li>Linux文件扩展名：<strong>一个Linux文件能否被执行，与它第一栏的十个属性有关，与文件名一点关系也没有</strong>，只要你的权限当中有【x】，就代表这个文件具有被执行的能力，不过<strong>可以被执行与可以执行成功是不一样的</strong>。我们仍然希望可以借助扩展名来了解该文件，所以通常我们还是会以适当的扩展名来表示该文件是什么种类，下面有数种常用的扩展名：<ul>
+<li>*.sh：脚本或批处理文件（scripts），因为批处理文件使用shell写成，所以扩展名就编程.sh</li>
+<li><em>Z、 </em>.tar、 <em>.tar.gz、 </em>.zip、 *.tgz：经过打包的压缩文件，这是因为压缩软件分别为gunzip、tar等，由于不同的压缩软件，而取其相关的扩展名</li>
+<li><em>.html、 </em>.php：网页相关文件，分别代表HTML语法与PHP语法的网页文件</li>
+</ul>
+</li>
+<li>Linux文件名长度限制：单一文件或者目录的最大容许文件名为255字节，以一个ASCII英文占用一个字节来说，则大约可达255个字符长度。若是以每个汉字占用2字节来说，最大文件名大约在128个汉字之间</li>
+<li>Linux文件名的限制：由于Linux在命令行模式下的一些命令操作关系，一般来说，在设置Linux下面的文件名时，最好可以避免一些特殊字符比较好，例如<code>* ? &gt; &lt; ; &amp; ! [ ] | \ &#39; &quot; ( ) { }</code>，因为这些符号在命令行模式下，是有特殊意义的。</li>
+</ol>
+<h2 id="3Linux目录配置"><a href="#3Linux目录配置" class="headerlink" title="3Linux目录配置"></a>3Linux目录配置</h2><h3 id="3-1Linux目录配置的依据——FHS-Filesystem-Hierarchy-Standard"><a href="#3-1Linux目录配置的依据——FHS-Filesystem-Hierarchy-Standard" class="headerlink" title="3.1Linux目录配置的依据——FHS(Filesystem Hierarchy Standard)"></a>3.1Linux目录配置的依据——FHS(Filesystem Hierarchy Standard)</h3><p>FHS的目的是希望<strong>让用户可以了解到已安装软件通常放置于哪个目录下</strong>，希望独立的软件开发商、操作系统制作者以及想要维护系统的用户，都能够遵循FHS的标准。FHS依据文件系统使用的频繁与否与是否允许用户随意修改，将目录定义成为四种交互作用的形态：<br>|  | 可分享（shareable） |不可分享（unshareable）|<br>|–|–|–|<br>|  不变（static）|/usr（软件存放处） |/etc（配置文件）|<br>||/opt（第三方辅助软件）|/boot（启动与内核文件）|<br>|可变动（variable）|/var/mail（用户邮箱）|/var/run（程序相关）|<br>||var/spool/news（新闻组）|/var/lock（程序相关）|</p>
+<ul>
+<li><strong>可分享</strong>：可以分享给其他系统挂载使用的目录，所以包括执行文件与用户的邮件等数据，是能够分享给网络上其他主机挂在用的目录</li>
+<li><strong>不可分享</strong>：自己机器上面运行的设备文件或是与程序有关的socket文件等，由于仅与自身机器有关，所以当然就不适合分享给其他主机</li>
+<li><strong>不变</strong>：有些数据是不会经常变动的，跟随着发行版而不变动。例如函数库、文件说明、系统管理员所管理的主机服务配置文件等</li>
+<li><strong>可变动</strong>：经常修改的数据。例如日志文件、一般用户可自行接受的新闻组等</li>
+</ul>
+<p><strong>事实上，FHS针对目录树架构仅定义出三层目录下面应该放置什么数据而已</strong></p>
+<ul>
+<li>/（root，根目录）：<strong>与启动系统有关</strong>，根目录（/）所在分区应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一分区内，保持根目录越小越好。如此不但能性能较佳，根目录所在的文件系统也较不容易发生问题</li>
+<li>/usr（unix software resour）：与软件安装/执行有关，UNIX操作系统软件资源所放置的目录，而不是用户的数据。<strong>FHS建议所有软件开发者，应该将他们的数据合理地分别放到这个目录的子目录下，而不要自行建立该软件自己独立的目录</strong></li>
+<li>/var（variable):<strong>与系统运行过程有关</strong>，这是在系统运行后才会渐渐占用硬盘容量的目录。因为/var目录主要针对经常性变动的文件，包括缓存（cache）、日志文件（log file）以及某些软件运行所产生的文件。</li>
+</ul>
+<h3 id="3-2目录树（directory-tree）"><a href="#3-2目录树（directory-tree）" class="headerlink" title="3.2目录树（directory tree）"></a>3.2目录树（directory tree）</h3><p>Linux目录配置方式为目录树，主要特点如下：</p>
+<ul>
+<li>目录树的起始点为根目录（/，root)</li>
+<li>每一个目录不止能使用本地分区的文件系统，也可以使用网络上的文件系统。举例来说，可以利用Network File System（NFS）服务器挂载某特定目录等</li>
+<li>每一个文件在此目录树中文件名（包含完整路径）都是独一无二的</li>
+</ul>
+<p>根据FHS的定义，最好能够将/var独立出来，这样对于系统的数据有一些安全性的保护，至少在/var死掉时，根目录还在，还能够进入恢复模式。</p>
+<h3 id="3-3绝对路径与相对路径"><a href="#3-3绝对路径与相对路径" class="headerlink" title="3.3绝对路径与相对路径"></a>3.3绝对路径与相对路径</h3><ul>
+<li>绝对路径：由根目录（/）开始写起的文件名或者目录名称</li>
+<li>相对路径：相对于目前路径的文件名写法</li>
+<li><strong>.</strong> :代表当前的目录，也可以使用 ./ 来表示</li>
+<li><strong>..</strong> 代表上一层目录，也可以使用../ 来表示</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
 </search>
